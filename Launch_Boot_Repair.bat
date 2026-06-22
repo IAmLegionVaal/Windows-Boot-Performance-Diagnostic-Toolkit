@@ -1,6 +1,7 @@
 @echo off
 setlocal
 cd /d "%~dp0"
+powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '%~dp0Windows_Boot_Performance_Repair_Toolkit.ps1' -ErrorAction SilentlyContinue"
 
 :menu
 cls
@@ -19,32 +20,54 @@ echo   0. Exit
 echo ============================================================
 set /p CHOICE=Select an option: 
 
-if "%CHOICE%"=="1" set ARGS=&goto run
-if "%CHOICE%"=="2" set ARGS=-RepairAllSafe&goto run
-if "%CHOICE%"=="3" set ARGS=-RestartExplorer&goto run
-if "%CHOICE%"=="4" set ARGS=-ClearIconCache&goto run
+if "%CHOICE%"=="1" goto diagnose
+if "%CHOICE%"=="2" goto safe
+if "%CHOICE%"=="3" goto explorer
+if "%CHOICE%"=="4" goto iconcache
 if "%CHOICE%"=="5" goto task
 if "%CHOICE%"=="6" goto runentry
-if "%CHOICE%"=="7" set ARGS=-RunDism&goto run
-if "%CHOICE%"=="8" set ARGS=-RunSfc&goto run
+if "%CHOICE%"=="7" goto dism
+if "%CHOICE%"=="8" goto sfc
 if "%CHOICE%"=="0" goto end
 goto menu
+
+:diagnose
+powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File "%~dp0Windows_Boot_Performance_Repair_Toolkit.ps1"
+goto complete
+
+:safe
+powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File "%~dp0Windows_Boot_Performance_Repair_Toolkit.ps1" -RepairAllSafe
+goto complete
+
+:explorer
+powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File "%~dp0Windows_Boot_Performance_Repair_Toolkit.ps1" -RestartExplorer
+goto complete
+
+:iconcache
+powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File "%~dp0Windows_Boot_Performance_Repair_Toolkit.ps1" -ClearIconCache
+goto complete
 
 :task
 set /p TASKPATH=Task path, for example \Vendor\ [default \]: 
 if "%TASKPATH%"=="" set TASKPATH=\
 set /p TASKNAME=Task name: 
-set ARGS=-DisableScheduledTask -TaskPath "%TASKPATH%" -TaskName "%TASKNAME%"
-goto run
+powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File "%~dp0Windows_Boot_Performance_Repair_Toolkit.ps1" -DisableScheduledTask -TaskPath "%TASKPATH%" -TaskName "%TASKNAME%"
+goto complete
 
 :runentry
 set /p RUNNAME=Current-user Run value name: 
-set ARGS=-DisableCurrentUserRunEntry -RunValueName "%RUNNAME%"
-goto run
+powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File "%~dp0Windows_Boot_Performance_Repair_Toolkit.ps1" -DisableCurrentUserRunEntry -RunValueName "%RUNNAME%"
+goto complete
 
-:run
-powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '%~dp0Windows_Boot_Performance_Repair_Toolkit.ps1' -ErrorAction SilentlyContinue"
-powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File "%~dp0Windows_Boot_Performance_Repair_Toolkit.ps1" %ARGS%
+:dism
+powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File "%~dp0Windows_Boot_Performance_Repair_Toolkit.ps1" -RunDism
+goto complete
+
+:sfc
+powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File "%~dp0Windows_Boot_Performance_Repair_Toolkit.ps1" -RunSfc
+goto complete
+
+:complete
 echo.
 pause
 goto menu
