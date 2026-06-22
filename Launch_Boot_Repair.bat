@@ -43,7 +43,8 @@ set ARGS=-DisableCurrentUserRunEntry -RunValueName "%RUNNAME%"
 goto run
 
 :run
-powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '%~dp0Windows_Boot_Performance_Repair_Toolkit.ps1' -ErrorAction SilentlyContinue; & '%~dp0Windows_Boot_Performance_Repair_Toolkit.ps1' %ARGS%"
+powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -Command "Unblock-File -LiteralPath '%~dp0Windows_Boot_Performance_Repair_Toolkit.ps1' -ErrorAction SilentlyContinue"
+powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File "%~dp0Windows_Boot_Performance_Repair_Toolkit.ps1" %ARGS%
 echo.
 pause
 goto menu
