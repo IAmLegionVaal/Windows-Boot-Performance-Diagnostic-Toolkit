@@ -89,4 +89,8 @@ Double-click:
 Launch_Boot_Repair.bat
 ```
 
-The scripts have been source-reviewed for Windows PowerShell 5.1 but have not been runtime-tested against every startup application, scheduled task or Windows build.
+## Validation status
+
+Tested successfully by the author on his own Windows machines. The documented boot and startup diagnostic and repair workflows worked as intended on those systems.
+
+Results may vary with the Windows build, user profile, startup software, scheduled tasks, permissions, security controls and machine-specific configuration. Use `-DryRun` before applying changes on a new machine.
